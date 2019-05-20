@@ -37,7 +37,7 @@
     <menus>
         <menu>
             <id>scope_menu</id>
-            <i18n-key>list.scope</i18n-key>
+            <i18n-key>OIDC范围</i18n-key>
             <i18n-bundle>org.wso2.carbon.identity.oauth.ui.i18n.Resource</i18n-bundle>
             <parent-menu>manage_menu</parent-menu>
             <link>#</link>
@@ -49,7 +49,7 @@
         </menu>
         <menu>
             <id>add_scope_menu</id>
-            <i18n-key>add</i18n-key>
+            <i18n-key>添加</i18n-key>
             <i18n-bundle>org.wso2.carbon.identity.oauth.ui.i18n.Resource</i18n-bundle>
             <parent-menu>scope_menu</parent-menu>
             <link>../oauth/add-oidc-scope.jsp</link>
@@ -60,7 +60,7 @@
         </menu>
         <menu>
             <id>list_scope_menu</id>
-            <i18n-key>list</i18n-key>
+            <i18n-key>列表</i18n-key>
             <i18n-bundle>org.wso2.carbon.identity.oauth.ui.i18n.Resource</i18n-bundle>
             <parent-menu>scope_menu</parent-menu>
             <link>../oauth/list-oidc-scopes.jsp</link>
