@@ -201,7 +201,7 @@ public class OAuthAdminService extends AbstractAdmin {
             }
             return dto;
         } catch (InvalidOAuthClientException | IdentityOAuth2Exception e) {
-            throw handleError("Error while retrieving the app information using consumerKey: " + consumerKey, e);
+            throw handleError("当使用consumerKey: " + consumerKey+"获取应用信息时发生错误.", e);
         }
 
     }
@@ -244,7 +244,7 @@ public class OAuthAdminService extends AbstractAdmin {
             }
             return dto;
         } catch (InvalidOAuthClientException | IdentityOAuth2Exception e) {
-            throw handleError("Error while retrieving the app information by app name: " + appName, e);
+            throw handleError("当使用应用名称：" + appName+" 获取应用信息时发生错误.", e);
         }
     }
 
@@ -279,7 +279,7 @@ public class OAuthAdminService extends AbstractAdmin {
                 app.setApplicationName(application.getApplicationName());
                 if ((application.getGrantTypes().contains(AUTHORIZATION_CODE) || application.getGrantTypes()
                         .contains(IMPLICIT)) && StringUtils.isEmpty(application.getCallbackUrl())) {
-                    throw new IdentityOAuthAdminException("Callback Url is required for Code or Implicit grant types");
+                    throw new IdentityOAuthAdminException("使用代码或隐式授权类型需要回调URL");
                 }
                 app.setCallbackUrl(application.getCallbackUrl());
                 app.setState(APP_STATE_ACTIVE);
@@ -311,7 +311,7 @@ public class OAuthAdminService extends AbstractAdmin {
                                     " as registrant name");
                         }
                     } catch (UserStoreException e) {
-                        throw handleError("Error while retrieving the user store manager for user: " +
+                        throw handleError("当获取用户存储管理器是发生错误: " +
                                 applicationUser, e);
                     }
 
@@ -330,7 +330,7 @@ public class OAuthAdminService extends AbstractAdmin {
                             continue;
                         }
                         if (!allowedGrantTypes.contains(requestedGrant)) {
-                            throw new IdentityOAuthAdminException(requestedGrant + " not allowed");
+                            throw new IdentityOAuthAdminException(requestedGrant + " 不允许");
                         }
                     }
                     app.setGrantTypes(application.getGrantTypes());
@@ -362,7 +362,7 @@ public class OAuthAdminService extends AbstractAdmin {
                             "tenant domain: " + tenantDomain);
                 }
             } else {
-                String message = "No application details in the request. Failed to register OAuth App";
+                String message = "请求中没有应用程序详细信息。注册OAuth应用失败";
                 if (log.isDebugEnabled()) {
                     log.debug(message);
                 }
@@ -377,7 +377,7 @@ public class OAuthAdminService extends AbstractAdmin {
                     log.debug("No authenticated user found. Failed to register OAuth App");
                 }
             }
-            throw new IdentityOAuthAdminException("No authenticated user found. Failed to register OAuth App");
+            throw new IdentityOAuthAdminException("找不到经过身份验证的用户。注册OAuth应用失败");
         }
         return getConsumerApplicationDetails(app);
     }
@@ -422,12 +422,12 @@ public class OAuthAdminService extends AbstractAdmin {
      */
     public void updateConsumerApplication(OAuthConsumerAppDTO consumerAppDTO) throws IdentityOAuthAdminException {
 
-        String errorMessage = "Error while updating the app information.";
+        String errorMessage = "当更新应用信息时发生错误.";
         boolean isHashDisabled = OAuth2Util.isHashDisabled();
         if (StringUtils.isEmpty(consumerAppDTO.getOauthConsumerKey()) || StringUtils.isEmpty(consumerAppDTO
                 .getOauthConsumerSecret())) {
-            errorMessage = "OauthConsumerKey or OauthConsumerSecret is not provided for " +
-                    "updating the OAuth application.";
+            errorMessage = "更新OAuth应用时，OauthConsumerKey 或 OauthConsumerSecret 未指定 " +
+                    ".";
             if (log.isDebugEnabled()) {
                 log.debug(errorMessage);
             }
@@ -456,7 +456,7 @@ public class OAuthAdminService extends AbstractAdmin {
                 throw new IdentityOAuthAdminException(errorMessage);
             }
         } catch (InvalidOAuthClientException | IdentityOAuth2Exception e) {
-            throw new IdentityOAuthAdminException("Error while updating the app information.", e);
+            throw new IdentityOAuthAdminException("更新应用信息时发生错误.", e);
         }
 
         String consumerKey = consumerAppDTO.getOauthConsumerKey();
@@ -483,7 +483,7 @@ public class OAuthAdminService extends AbstractAdmin {
                     continue;
                 }
                 if (!allowedGrantsTypes.contains(requestedGrant)) {
-                    throw new IdentityOAuthAdminException(requestedGrant + " not allowed for OAuth App with " +
+                    throw new IdentityOAuthAdminException(requestedGrant + " 不允许。对OAuth应用具有 " +
                             "consumerKey: " + consumerKey);
                 }
             }
@@ -529,10 +529,10 @@ public class OAuthAdminService extends AbstractAdmin {
             if (StringUtils.isNotEmpty(scope)) {
                 OAuthTokenPersistenceFactory.getInstance().getScopeClaimMappingDAO().addScope(tenantId, scope, claims);
             } else {
-                throw new IdentityOAuthAdminException("The scope can not be empty.");
+                throw new IdentityOAuthAdminException("范围不能为空.");
             }
         } catch (IdentityOAuth2Exception e) {
-            throw handleError("Error while inserting OIDC scopes and claims.", e);
+            throw handleError("当插入OIDC 范围和声明时发生错误.", e);
         }
     }
 
@@ -557,7 +557,7 @@ public class OAuthAdminService extends AbstractAdmin {
                 return new ScopeDTO[0];
             }
         } catch (IdentityOAuth2Exception e) {
-            throw handleError("Error while loading OIDC scopes and claims for tenant: " + tenantId, e);
+            throw handleError("当为租户: " + tenantId +"加载范围和声明时发生错误 ", e);
         }
     }
 
@@ -573,7 +573,7 @@ public class OAuthAdminService extends AbstractAdmin {
         try {
             OAuthTokenPersistenceFactory.getInstance().getScopeClaimMappingDAO().deleteScope(scope, tenantId);
         } catch (IdentityOAuth2Exception e) {
-            throw handleError("Error while deleting OIDC scope: " + scope, e);
+            throw handleError("当删除OIDC范围时发生错误: " + scope, e);
         }
     }
 
@@ -598,7 +598,7 @@ public class OAuthAdminService extends AbstractAdmin {
                 return new String[0];
             }
         } catch (IdentityOAuth2Exception e) {
-            throw handleError("Error while loading OIDC scopes and claims for tenant: " + tenantId, e);
+            throw handleError("当为租户: " + tenantId +"加载范围和声明时发生错误 ", e);
         }
     }
 
@@ -624,7 +624,7 @@ public class OAuthAdminService extends AbstractAdmin {
                 return new String[0];
             }
         } catch (IdentityOAuth2Exception e) {
-            throw handleError("Error while loading OIDC claims for the scope: " + scope + " in tenant: " + tenantId, e);
+            throw handleError("当在租户"+tenantId+"中加载范围" + scope + "的OIDC声明是发生错误", e);
         }
     }
 
@@ -644,7 +644,7 @@ public class OAuthAdminService extends AbstractAdmin {
             OAuthTokenPersistenceFactory.getInstance().getScopeClaimMappingDAO().
                     updateScope(scope, tenantId, Arrays.asList(addClaims), Arrays.asList(deleteClaims));
         } catch (IdentityOAuth2Exception e) {
-            throw handleError("Error while updating OIDC claims for the scope: " + scope + " in tenant: " + tenantId, e);
+            throw handleError("当在租户"+tenantId+"中更新范围" + scope + "的OIDC声明是发生错误", e);
         }
     }
 
@@ -661,7 +661,7 @@ public class OAuthAdminService extends AbstractAdmin {
         try {
             return OAuthTokenPersistenceFactory.getInstance().getScopeClaimMappingDAO().isScopeExist(scope, tenantId);
         } catch (IdentityOAuth2Exception e) {
-            throw handleError("Error while inserting the scopes.", e);
+            throw handleError("插入范围时发生错误.", e);
         }
     }
 
@@ -693,7 +693,7 @@ public class OAuthAdminService extends AbstractAdmin {
             }
 
         } catch (InvalidOAuthClientException | IdentityOAuth2Exception e) {
-            throw handleError("Error while updating state of OAuth app with consumerKey: " + consumerKey, e);
+            throw handleError("当更新Oauth应用的状态时发生错误，使用的consumerKey是: " + consumerKey, e);
         }
     }
 
@@ -986,8 +986,8 @@ public class OAuthAdminService extends AbstractAdmin {
                                     OAuthTokenPersistenceFactory.getInstance().getAccessTokenDAO()
                                             .revokeAccessTokens(new String[]{scopedToken.getAccessToken()});
                                 } catch (IdentityOAuth2Exception e) {
-                                    String errorMsg = "Error occurred while revoking " + "Access Token : " +
-                                            scopedToken.getAccessToken();
+                                    String errorMsg = "当回收Access Token : " +
+                                            scopedToken.getAccessToken()+"时发生错误";
                                     throw handleError(errorMsg, e);
                                 }
                                 //Revoking the oauth consent from database.
@@ -996,8 +996,8 @@ public class OAuthAdminService extends AbstractAdmin {
                                             .revokeOAuthConsentByApplicationAndUser(((AuthenticatedUser) authzUser)
                                                     .getAuthenticatedSubjectIdentifier(), tenantDomain, appName);
                                 } catch (IdentityOAuth2Exception e) {
-                                    String errorMsg = "Error occurred while removing OAuth Consent of Application " +
-                                            appName + " of user " + userName;
+                                    String errorMsg = "当移除用户"+userName+"的应用" +
+                                            appName + "的Oauth同意时发生错误";
                                     throw handleError(errorMsg, e);
                                 }
                             }
@@ -1011,7 +1011,7 @@ public class OAuthAdminService extends AbstractAdmin {
             OAuthRevocationResponseDTO revokeRespDTO = new OAuthRevocationResponseDTO();
             revokeRespDTO.setError(true);
             revokeRespDTO.setErrorCode(OAuth2ErrorCodes.INVALID_REQUEST);
-            revokeRespDTO.setErrorMsg("Invalid revocation request");
+            revokeRespDTO.setErrorMsg("无效的吊销请求");
 
             //passing a single element array with null element to make sure listeners are triggered at least once
             triggerPostRevokeListeners(revokeRequestDTO, revokeRespDTO, new AccessTokenDO[]{null});
@@ -1043,7 +1043,7 @@ public class OAuthAdminService extends AbstractAdmin {
             log.error(errorMsg, e);
             revokeRespDTO.setError(true);
             revokeRespDTO.setErrorCode(OAuth2ErrorCodes.INVALID_REQUEST);
-            revokeRespDTO.setErrorMsg("Invalid revocation request");
+            revokeRespDTO.setErrorMsg("无效的吊销请求");
         }
         return revokeRespDTO;
     }
@@ -1058,7 +1058,7 @@ public class OAuthAdminService extends AbstractAdmin {
                 Map<String, Object> paramMap = new HashMap<>();
                 oAuthEventInterceptorProxy.onPreTokenRevocationByResourceOwner(revokeRequestDTO, paramMap);
             } catch (IdentityOAuth2Exception e) {
-                throw handleError("Error occurred with Oauth pre-revoke listener ", e);
+                throw handleError("当OAuth预回收侦听器是发生错误. ", e);
             }
         }
     }
@@ -1223,7 +1223,7 @@ public class OAuthAdminService extends AbstractAdmin {
         }
         for (String requestedScopeValidator : requestedScopeValidators) {
             if (!scopeValidators.contains(requestedScopeValidator)) {
-                throw new IdentityOAuthAdminException(requestedScopeValidator + " not allowed");
+                throw new IdentityOAuthAdminException(requestedScopeValidator + " 不被允许");
             }
         }
         return requestedScopeValidators;
